@@ -12,5 +12,12 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
+
+Route::get('/hotels', 'HotelController@index');
+
+Route::view('/services', 'services');
+Route::view('/about','about');
+Route::view('/contact', 'contact');
+Route::view('/hotel-room', 'hotel-room');

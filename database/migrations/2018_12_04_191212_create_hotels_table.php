@@ -21,6 +21,7 @@ class CreateHotelsTable extends Migration
             $table->unsignedInteger('category_id');
             $table->unsignedInteger('location_id');
             $table->text('description');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

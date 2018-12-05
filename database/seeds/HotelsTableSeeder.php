@@ -11,7 +11,8 @@ class HotelsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory('App\Hotel', 25)->create()->each(function ($hotel) {
+        factory('App\Hotel', 20)->create()->each(function ($hotel) {
+            $hotel->update(['image' => 'images/hotel-' . $hotel->id . '.jpg']);
         	$hotel->facilities()->sync(\App\Facility::all()->random(mt_rand(1, 4))->pluck('id')->toArray());
         });
 	}

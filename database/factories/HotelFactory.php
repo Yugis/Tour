@@ -17,8 +17,9 @@ $factory->define(App\Hotel::class, function (Faker $faker) {
     return [
         'name' => $faker->city,
         'rating' => $faker->numberBetween($min = 1, $max = 5),
-        'price' => $faker->numberBetween($min=100, $max = 10000),
+        'price' => mt_rand(100, 10000),
         'description' => $faker->paragraph($nbSentences = 1, $variableNbSentences = true),
+        // 'image' => 'images/hotel-' . rand(1, 9) . '.jpg',
         'category_id' => function () {
         	return App\Category::all()->random()->id;
         },

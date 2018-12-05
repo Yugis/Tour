@@ -8,6 +8,6 @@ class Location extends Model
 {
     public function hotels()
     {
-    	return $this->hasMany(Hote::class);
+    	return $this->hasMany(Hotel::class);
     }
 }

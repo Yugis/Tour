@@ -14,7 +14,38 @@ class HotelController extends Controller
      */
     public function index()
     {
-        //
+        // dd(request()->all());
+        
+        $hotels = (new Hotel)->newQuery();
+
+        if (request()->has('category_id')) {
+            $hotels->whereIn('category_id', request()->category_id);
+        }
+        // dd($hotels->get());
+
+
+        if(request()->has('location_id')) {
+            $hotels->whereIn('location_id', request()->location_id);
+        }
+
+        // dd($hotels->get());
+
+        request()->flash();
+
+        if(count(request()->all())) {
+            $hotels = $hotels->paginate(2)->appends([
+                'category_id' => request('category_id'),
+                'location_id' => request('location_id'),
+            ]);
+        }
+
+        // $hotels = Hotel::inRandomOrder()->paginate(8);
+
+        if(! count(request()->all())) {
+            $hotels = Hotel::inRandomOrder()->paginate(8);
+        }
+
+        return view('hotels', compact('hotels'));
     }
 
     /**
