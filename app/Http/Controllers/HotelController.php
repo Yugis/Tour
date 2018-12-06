@@ -14,103 +14,51 @@ class HotelController extends Controller
      */
     public function index()
     {
-        // dd(request()->all());
-        
         $hotels = (new Hotel)->newQuery();
+
+        if (request()->has('min_price') && request()->has('max_price')) {
+            $hotels->where('price', '>', request()->min_price);
+            $hotels->where('price', '<', request()->max_price);
+        }
+
+        if (request()->has('rating')) {
+            $hotels->whereIn('rating', request()->rating);
+        }
 
         if (request()->has('category_id')) {
             $hotels->whereIn('category_id', request()->category_id);
         }
-        // dd($hotels->get());
-
 
         if(request()->has('location_id')) {
             $hotels->whereIn('location_id', request()->location_id);
         }
 
-        // dd($hotels->get());
+        if(request()->has('facility_id')) {
+            $hotels->whereHas('facilities', function ($query) {
+                return $query->whereIn('facility_id', request()->facility_id);
+            });
+        }
 
         request()->flash();
 
         if(count(request()->all())) {
-            $hotels = $hotels->paginate(2)->appends([
+            $hotels = $hotels->paginate(6)->appends([
                 'category_id' => request('category_id'),
                 'location_id' => request('location_id'),
+                'facility_id' => request('facility_id'),
+                'rating' => request('rating'),
+                'min_price' => request('min_price'),
+                'max_price' => request('max_price'),
+                'guests' => request('guests'),
+                'check_in' => request('check_in'),
+                'check_out' => request('check_out'),
             ]);
         }
-
-        // $hotels = Hotel::inRandomOrder()->paginate(8);
 
         if(! count(request()->all())) {
             $hotels = Hotel::inRandomOrder()->paginate(8);
         }
 
         return view('hotels', compact('hotels'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Hotel  $hotel
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Hotel $hotel)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Hotel  $hotel
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Hotel $hotel)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Hotel  $hotel
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Hotel $hotel)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Hotel  $hotel
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Hotel $hotel)
-    {
-        //
     }
 }

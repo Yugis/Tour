@@ -55,7 +55,7 @@
 						</div>
 						<div class="col-xs-10 text-right menu-1">
 							<ul>
-								<li class="{{Request::is('/') ? "active" : "" }}"><a href="index.html">Home</a></li>
+								<li class="{{Request::is('/') ? "active" : "" }}"><a href="/">Home</a></li>
 								
 								<li class="{{Request::is('hotels') ? "active" : "" }}"><a href="/hotels">Hotels</a></li>
 								<li class="{{Request::is('services') ? "active" : "" }}"><a href="/services">Services</a></li>
@@ -92,39 +92,37 @@
 					<div class="col-md-9">
 						<div class="row">
 							<div class="wrap-division">
-								@foreach($hotels as $hotel)
-								<div class="col-md-6 col-sm-6 animate-box">
-									<div class="hotel-entry">
-										<a href="/hotel-room" class="hotel-img" style="background-image: url({{ $hotel->image }});">
-											<p class="price"><span>${{ trim($hotel->price, '.0') }}</span><small> /night</small></p>
-										</a>
-										<div class="desc">
-											<p class="star">
-												<span>
-													@for($i = 0; $i < $hotel->rating; $i++)
-														<i class="icon-star-full"></i>
-													@endfor
-												</span> {{ $hotel->rating * mt_rand(10, 300) }} Reviews
-											</p>
-											<h3><a href="/hotel-room">{{ $hotel->name }}</a></h3>
-											<span class="place">{{ $hotel->location->name }}</span>
-											<p>{{ $hotel->description }}</p>
+									@if($hotels->isNotEmpty())
+									@foreach($hotels as $hotel)
+									<div class="col-md-6 col-sm-6 animate-box">
+										<div class="hotel-entry">
+											<a href="/hotel-room" class="hotel-img" style="background-image: url({{ $hotel->image }});">
+												<p class="price"><span>${{ trim($hotel->price, '.0') }}</span><small> /night</small></p>
+											</a>
+											<div class="desc">
+												<p class="star">
+													<span>
+														@for($i = 0; $i < $hotel->rating; $i++)
+															<i class="icon-star-full"></i>
+														@endfor
+													</span> {{ $hotel->rating * mt_rand(10, 300) }} Reviews
+												</p>
+												<h3><a href="/hotel-room">{{ $hotel->name }}</a></h3>
+												<span class="place">{{ $hotel->location->name }}</span>
+												<p>{{ $hotel->description }}</p>
+											</div>
 										</div>
 									</div>
-								</div>
-								@endforeach
+									@endforeach
+								@else
+									<center><h3>No hotels available with these specifications.</h3></center>
+								@endif
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-md-12 text-center">
 								<ul class="pagination">
 									{{ $hotels->links() }}
-									{{-- <li class="disabled"><a href="#">&laquo;</a></li>
-									<li class="active"><a href="#">1</a></li>
-									<li><a href="#">2</a></li>
-									<li><a href="#">3</a></li>
-									<li><a href="#">4</a></li>
-									<li><a href="#">&raquo;</a></li> --}}
 								</ul>
 							</div>
 						</div>
@@ -135,14 +133,13 @@
 							<form action="">
 								<div class="side search-wrap animate-box colorlib-form">
 									<h3 class="sidebar-heading">Find your hotel</h3>
-									{{-- <form method="post" class="colorlib-form"> --}}
 					              	<div class="row">
 					                <div class="col-md-12">
 					                  <div class="form-group">
 					                    <label for="date">Check-in:</label>
 					                    <div class="form-field">
 					                      <i class="icon icon-calendar2"></i>
-					                      <input type="text" id="date" class="form-control date" placeholder="Check-in date">
+					                      <input name="check_in" type="text" id="date" class="form-control date" placeholder="Check-in date" value="{{ old('check_in') }}">
 					                    </div>
 					                  </div>
 					                </div>
@@ -151,7 +148,7 @@
 					                    <label for="date">Check-out:</label>
 					                    <div class="form-field">
 					                      <i class="icon icon-calendar2"></i>
-					                      <input type="text" id="date" class="form-control date" placeholder="Check-out date">
+					                      <input name="check_out" type="text" id="date" class="form-control date" placeholder="Check-out date" value="{{ old('check_out') }}">
 					                    </div>
 					                  </div>
 					                </div>
@@ -160,13 +157,13 @@
 					                    <label for="guests">Guest</label>
 					                    <div class="form-field">
 					                      <i class="icon icon-arrow-down3"></i>
-					                      {{-- <select name="people" id="people" class="form-control">
-					                        <option value="1">1</option>
-					                        <option value="2">2</option>
-					                        <option value="3">3</option>
-					                        <option value="4">4</option>
-					                        <option value="5">5+</option>
-					                      </select> --}}
+					                      <select name="guests" id="people" class="form-control">
+					                        <option value="1" {{ old('guests') == 1 ? ' selected' : '' }}>1</option>
+					                        <option value="2" {{ old('guests') == 2 ? ' selected' : '' }}>2</option>
+					                        <option value="3" {{ old('guests') == 3 ? ' selected' : '' }}>3</option>
+					                        <option value="4" {{ old('guests') == 4 ? ' selected' : '' }}>4</option>
+					                        <option value="5" {{ old('guests') == 5 ? ' selected' : '' }}>5+</option>
+					                      </select>
 					                    </div>
 					                  </div>
 					                </div>
@@ -174,27 +171,25 @@
 					                  <input type="submit" value="Find Hotel" class="btn btn-primary btn-block">
 					                </div>
 					              </div>
-					            {{-- </form> --}}
 								</div>
 								<div class="side animate-box">
 									<div class="row">
 										<div class="col-md-12 colorlib-form-2">
 											<h3 class="sidebar-heading">Price Range</h3>
-											{{-- <form method="post" class="colorlib-form-2"> --}}
 							              	<div class="row">
 							                <div class="col-md-6">
 							                  <div class="form-group">
 							                    <label for="guests">Price from:</label>
 							                    <div class="form-field">
 							                      <i class="icon icon-arrow-down3"></i>
-							                      {{-- <select name="min_price" id="min_price" class="form-control">
+							                      <select name="min_price" id="min_price" class="form-control">
 							                        <option value="0" selected>0</option>
-							                        <option value="100">100</option>
-							                        <option value="200">200</option>
-							                        <option value="300">300</option>
-							                        <option value="400">400</option>
-							                        <option value="1000">1000</option>
-							                      </select> --}}
+							                        <option value="100" {{ old('min_price') == 100 ? ' selected' : '' }}>100</option>
+							                        <option value="200" {{ old('min_price') == 200 ? ' selected' : '' }}>200</option>
+							                        <option value="300" {{ old('min_price') == 300 ? ' selected' : '' }}>300</option>
+							                        <option value="400" {{ old('min_price') == 400 ? ' selected' : '' }}>400</option>
+							                        <option value="1000" {{ old('min_price') == 1000 ? ' selected' : '' }}>1000</option>
+							                      </select>
 							                    </div>
 							                  </div>
 							                </div>
@@ -203,18 +198,17 @@
 							                    <label for="guests">Price to:</label>
 							                    <div class="form-field">
 							                      <i class="icon icon-arrow-down3"></i>
-							                      {{-- <select name="max_price" id="max_price" class="form-control">
-							                        <option value="2000">2000</option>
-							                        <option value="4000">4000</option>
-							                        <option value="6000">6000</option>
-							                        <option value="8000">8000</option>
-							                        <option value="10000" selected>10000</option>
-							                      </select> --}}
+							                      <select name="max_price" id="max_price" class="form-control">
+							                        <option value="10000" {{ old('max_price') == 10000 ? ' selected' : '' }}>10000</option>
+							                        <option value="8000" {{ old('max_price') == 8000 ? ' selected' : '' }}>8000</option>
+							                        <option value="6000" {{ old('max_price') == 6000 ? ' selected' : '' }}>6000</option>
+							                        <option value="4000" {{ old('max_price') == 4000 ? ' selected' : '' }}>4000</option>
+							                        <option value="2000" {{ old('max_price') == 2000 ? ' selected' : '' }}>2000</option>
+							                      </select>
 							                    </div>
 							                  </div>
 							                </div>
 							              </div>
-							            {{-- </form> --}}
 						            </div>
 									</div>
 								</div>
@@ -222,38 +216,36 @@
 									<div class="row">
 										<div class="col-md-12 colorlib-form-2">
 											<h3 class="sidebar-heading">Review Rating</h3>
-											{{-- <form method="post" class="colorlib-form-2"> --}}
 											   <div class="form-check">
-													<input type="checkbox" name="ratings[]" class="form-check-input" id="exampleCheck1" value="">
+													<input type="checkbox" name="rating[]" class="form-check-input" value="5" {{ (is_array(old('rating')) && in_array(5, old('rating'))) ? ' checked' : '' }}>
 													<label class="form-check-label" for="exampleCheck1">
 														<p class="rate"><span><i class="icon-star-full"></i><i class="icon-star-full"></i><i class="icon-star-full"></i><i class="icon-star-full"></i><i class="icon-star-full"></i></span></p>
 													</label>
 											   </div>
 											   <div class="form-check">
-											      <input type="checkbox" name="ratings[]" class="form-check-input" id="exampleCheck1" value="">
+											      <input type="checkbox" name="rating[]" class="form-check-input" value="4" {{ (is_array(old('rating')) && in_array(4, old('rating'))) ? ' checked' : '' }}>
 											      <label class="form-check-label" for="exampleCheck1">
 											    	   <p class="rate"><span><i class="icon-star-full"></i><i class="icon-star-full"></i><i class="icon-star-full"></i><i class="icon-star-full"></i></span></p>
 											      </label>
 											   </div>
 											   <div class="form-check">
-											      <input type="checkbox" name="ratings[]" class="form-check-input" id="exampleCheck1" value="">
+											      <input type="checkbox" name="rating[]" class="form-check-input" value="3" {{ (is_array(old('rating')) && in_array(3, old('rating'))) ? ' checked' : '' }}>
 											      <label class="form-check-label" for="exampleCheck1">
 											      	<p class="rate"><span><i class="icon-star-full"></i><i class="icon-star-full"></i><i class="icon-star-full"></i></span></p>
 											     </label>
 											   </div>
 											   <div class="form-check">
-											      <input type="checkbox" name="ratings[]" class="form-check-input" id="exampleCheck1" value="">
+											      <input type="checkbox" name="rating[]" class="form-check-input" value="2" {{ (is_array(old('rating')) && in_array(2, old('rating'))) ? ' checked' : '' }}>
 											      <label class="form-check-label" for="exampleCheck1">
 											      	<p class="rate"><span><i class="icon-star-full"></i><i class="icon-star-full"></i></span></p>
 											     </label>
 											   </div>
 											   <div class="form-check">
-											      <input type="checkbox" name="ratings[]" class="form-check-input" id="exampleCheck1" value="">
+											      <input type="checkbox" name="rating[]" class="form-check-input" value="1" {{ (is_array(old('rating')) && in_array(1, old('rating'))) ? ' checked' : '' }}>
 											      <label class="form-check-label" for="exampleCheck1">
 											      	<p class="rate"><span><i class="icon-star-full"></i></span></p>
 											     </label>
 											   </div>
-											{{-- </form> --}}
 										</div>
 									</div>
 								</div>
@@ -261,7 +253,6 @@
 									<div class="row">
 										<div class="col-md-12 colorlib-form-2">
 											<h3 class="sidebar-heading">Categories</h3>
-											{{-- <form method="post" class="colorlib-form-2"> --}}
 											   <div class="form-check">
 													<input type="checkbox" name="category_id[]" class="form-check-input"  value="1" {{ (is_array(old('category_id')) && in_array(1, old('category_id'))) ? ' checked' : '' }}>
 													<label class="form-check-label" for="exampleCheck1">
@@ -292,7 +283,6 @@
 														<h4 class="place">Villa</h4>
 													</label>
 											   </div>
-											{{-- </form> --}}
 										</div>
 									</div>
 								</div>
@@ -300,7 +290,6 @@
 									<div class="row">
 										<div class="col-md-12 colorlib-form-2">
 											<h3 class="sidebar-heading">Location</h3>
-											{{-- <form method="post" class="colorlib-form-2"> --}}
 											   <div class="form-check">
 													<input type="checkbox" name="location_id[]" class="form-check-input" value="1" {{ (is_array(old('location_id')) && in_array(1, old('location_id'))) ? ' checked' : '' }}>
 													<label class="form-check-label" for="exampleCheck1">
@@ -331,7 +320,6 @@
 														<h4 class="place">Japan</h4>
 													</label>
 											   </div>
-											{{-- </form> --}}
 										</div>
 									</div>
 								</div>
@@ -339,38 +327,30 @@
 									<div class="row">
 										<div class="col-md-12 colorlib-form-2">
 											<h3 class="sidebar-heading">Facilities</h3>
-											{{-- <form method="post" class="colorlib-form-2"> --}}
 											   <div class="form-check">
-													<input type="checkbox" class="form-check-input" id="exampleCheck1">
+													<input type="checkbox" name="facility_id[]" class="form-check-input" value="1" {{ (is_array(old('facility_id')) && in_array(1, old('facility_id'))) ? ' checked' : '' }}>
 													<label class="form-check-label" for="exampleCheck1">
 														<h4 class="place">Airport Transfer</h4>
 													</label>
 											   </div>
 											   <div class="form-check">
-											      <input type="checkbox" class="form-check-input" id="exampleCheck1">
+											      <input type="checkbox" name="facility_id[]" class="form-check-input" value="2" {{ (is_array(old('facility_id')) && in_array(2, old('facility_id'))) ? ' checked' : '' }}>
 											      <label class="form-check-label" for="exampleCheck1">
 														<h4 class="place">Resto Bar</h4>
 													</label>
 											   </div>
 											   <div class="form-check">
-											      <input type="checkbox" class="form-check-input" id="exampleCheck1">
+											      <input type="checkbox" name="facility_id[]" class="form-check-input" value="3" {{ (is_array(old('facility_id')) && in_array(3, old('facility_id'))) ? ' checked' : '' }}>
 											      <label class="form-check-label" for="exampleCheck1">
 														<h4 class="place">Restaurant</h4>
 													</label>
 											   </div>
 											   <div class="form-check">
-											      <input type="checkbox" class="form-check-input" id="exampleCheck1">
+											      <input type="checkbox" name="facility_id[]" class="form-check-input" value="4" {{ (is_array(old('facility_id')) && in_array(4, old('facility_id'))) ? ' checked' : '' }}>
 											      <label class="form-check-label" for="exampleCheck1">
 														<h4 class="place">Swimming Pool</h4>
 													</label>
 											   </div>
-											   <div class="form-check">
-											      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-											      <label class="form-check-label" for="exampleCheck1">
-														<h4 class="place">Japan</h4>
-													</label>
-											   </div>
-											{{-- </form> --}}
 										</div>
 									</div>
 								</div>

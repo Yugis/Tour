@@ -12,7 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('index');
+	$locations = \App\Location::all();
+
+    return view('index', compact('locations'));
 });
 
 Route::get('/hotels', 'HotelController@index');

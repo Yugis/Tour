@@ -55,7 +55,7 @@
 						</div>
 						<div class="col-xs-10 text-right menu-1">
 							<ul>
-								<li class="{{Request::is('/') ? "active" : "" }}"><a href="index.html">Home</a></li>
+								<li class="{{Request::is('/') ? "active" : "" }}"><a href="/">Home</a></li>
 								
 								<li class="{{Request::is('hotels') ? "active" : "" }}"><a href="/hotels">Hotels</a></li>
 								<li class="{{Request::is('services') ? "active" : "" }}"><a href="/services">Services</a></li>
@@ -135,13 +135,19 @@
 						</div>
 						<div class="tab-content">
 							<div id="flight" class="tab-pane fade in active">
-								<form method="post" class="colorlib-form">
+								<form method="get" action="/hotels" class="colorlib-form">
 				              	<div class="row">
 				              	 <div class="col-md-3">
 				              	 	<div class="form-group">
 				                    <label for="date">Where:</label>
 				                    <div class="form-field">
-				                      <input type="text" id="location" class="form-control" placeholder="Search Location">
+				                      <i class="icon icon-arrow-down3"></i>
+					                      <select name="location_id[]" class="form-control">
+					                        <option value="#" disabled selected>Select a destination...</option>
+											@foreach($locations as $location)
+						                        <option value="{{ $location->id }}">{{ $location->name }}</option>
+											@endforeach
+					                      </select>
 				                    </div>
 				                  </div>
 				              	 </div>
@@ -150,7 +156,7 @@
 				                    <label for="date">Check-in:</label>
 				                    <div class="form-field">
 				                      <i class="icon icon-calendar2"></i>
-				                      <input type="text" id="date" class="form-control date" placeholder="Check-in date">
+				                      <input name="check_in" type="text" id="date" class="form-control date" placeholder="Check-in date">
 				                    </div>
 				                  </div>
 				                </div>
@@ -159,7 +165,7 @@
 				                    <label for="date">Check-out:</label>
 				                    <div class="form-field">
 				                      <i class="icon icon-calendar2"></i>
-				                      <input type="text" id="date" class="form-control date" placeholder="Check-out date">
+				                      <input name="check_out" type="text" id="date" class="form-control date" placeholder="Check-out date">
 				                    </div>
 				                  </div>
 				                </div>
@@ -168,18 +174,18 @@
 				                    <label for="guests">Guest</label>
 				                    <div class="form-field">
 				                      <i class="icon icon-arrow-down3"></i>
-				                      <select name="people" id="people" class="form-control">
-				                        <option value="#">1</option>
-				                        <option value="#">2</option>
-				                        <option value="#">3</option>
-				                        <option value="#">4</option>
-				                        <option value="#">5+</option>
+				                      <select name="guests" id="people" class="form-control">
+				                        <option value="1">1</option>
+				                        <option value="2">2</option>
+				                        <option value="3">3</option>
+				                        <option value="4">4</option>
+				                        <option value="5">5+</option>
 				                      </select>
 				                    </div>
 				                  </div>
 				                </div>
 				                <div class="col-md-2">
-				                  <input type="submit" name="submit" id="submit" value="Find Flights" class="btn btn-primary btn-block">
+				                  <input type="submit" value="Find Hotel" class="btn btn-primary btn-block">
 				                </div>
 				              </div>
 				            </form>
