@@ -42,7 +42,7 @@ class HotelController extends Controller
         request()->flash();
 
         if(count(request()->all())) {
-            $hotels = $hotels->paginate(6)->appends([
+            $hotels = $hotels->paginate(8)->appends([
                 'category_id' => request('category_id'),
                 'location_id' => request('location_id'),
                 'facility_id' => request('facility_id'),
