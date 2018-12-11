@@ -23,7 +23,8 @@
 	
 	<link rel="stylesheet" href="/css/animate.css">
 	<link rel="stylesheet" href="/css/icomoon.css">
-	<link rel="stylesheet" href="/css/bootstrap.css">
+	{{-- <link rel="stylesheet" href="/css/bootstrap.css"> --}}
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
 	<link rel="stylesheet" href="/css/magnific-popup.css">
 
@@ -48,7 +49,7 @@
 				<nav class="colorlib-nav" role="navigation">
 			<div class="top-menu">
 				<div class="container-fluid">
-					<div class="row">
+					<div class="row d-flex justify-content-between">
 						<div class="col-xs-2">
 							<div id="colorlib-logo"><a href="index.html">Tour</a></div>
 						</div>
@@ -72,10 +73,10 @@
 			   	<li style="background-image: url(/images/cover-img-4.jpg);">
 			   		<div class="overlay"></div>
 			   		<div class="container-fluid">
-			   			<div class="row">
+			   			<div class="row d-flex justify-content-center">
 				   			<div class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12 slider-text">
 				   				<div class="slider-text-inner text-center">
-				   					<h1>Hotel Overview</h1>
+				   					<h1>Booking</h1>
 				   				</div>
 				   			</div>
 				   		</div>
@@ -98,108 +99,67 @@
 									<div class="row">
 										<div class="col-md-12 animate-box">
 											<div class="room-wrap">
-												<div class="row">
-													<div class="col-md-6 col-sm-6">
-														<div class="room-img" style="background-image: url(/images/room-1.jpg);"></div>
-													</div>
-													<div class="col-md-6 col-sm-6">
-														<div class="desc">
-															<h2>Family Room</h2>
-															<p class="price"><span>$45</span> <small>/ night</small></p>
-															<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
-															<p><a href="{{ route('booking', ['location' => strtolower($hotel->location->name), 'id' => $hotel->id]) }}" class="btn btn-primary">Book Now!</a></p>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
+												<div class="row d-flex flex-column">
+													<form action="" method="POST">
+														@csrf
 
-										<div class="col-md-12 animate-box">
-											<div class="room-wrap">
-												<div class="row">
-													<div class="col-md-6 col-sm-6">
-														<div class="room-img" style="background-image: url(/images/room-2.jpg);"></div>
-													</div>
-													<div class="col-md-6 col-sm-6">
-														<div class="desc">
-															<h2>Luxury Room</h2>
-															<p class="price"><span>$75</span> <small>/ night</small></p>
-															<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
-															<p><a href="{{ route('booking', ['location' => strtolower($hotel->location->name), 'id' => $hotel->id]) }}" class="btn btn-primary">Book Now!</a></p>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
+														@if ($errors->any())
+														    <div class="alert alert-danger">
+														        <ul>
+														            @foreach ($errors->all() as $error)
+														                <li>{{ $error }}</li>
+														            @endforeach
+														        </ul>
+														    </div>
+														@endif
 
-										<div class="col-md-12 animate-box">
-											<div class="room-wrap">
-												<div class="row">
-													<div class="col-md-6 col-sm-6">
-														<div class="room-img" style="background-image: url(/images/room-3.jpg);"></div>
-													</div>
-													<div class="col-md-6 col-sm-6">
-														<div class="desc">
-															<h2>Double Room</h2>
-															<p class="price"><span>$40</span> <small>/ night</small></p>
-															<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
-															<p><a href="{{ route('booking', ['location' => strtolower($hotel->location->name), 'id' => $hotel->id]) }}" class="btn btn-primary">Book Now!</a></p>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
+														<div class="card">
+															<div class="card-header bg-primary text-white">
+																Book A Room
+															</div>
+															<div class="card-body">
+																<div class="form-group">
+																	<label for="first_name">First Name:</label>
+																	<input type="text" name="first_name" class="form-control" value="{{ old('first_name') }}" required>
+																	<br>
+																	<label for="last_name">Last Name:</label>
+																	<input type="text" name="last_name" class="form-control" value="{{ old('last_name') }}" required>
+																	<br>
+																	<label for="email">Email Address:</label>
+																	<input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
+																	<br>
+																	<label for="Room Type">Room:</label>
+																	<select name="room_id" class="form-control" required>
+																		<option value="" selected disabled>Select a room...</option>
+																		<option value="1" {{ old('room_id') == 1 ? ' selected' : '' }}>Family Room - $45 /night</option>
+																		<option value="2" {{ old('room_id') == 2 ? ' selected' : '' }}>Luxury Room - $75 /night</option>
+																		<option value="3" {{ old('room_id') == 3 ? ' selected' : '' }}>Double Room - $40 /night</option>
+																		<option value="4" {{ old('room_id') == 4 ? ' selected' : '' }}>Superior Double Room - $50 /night</option>
+																		<option value="5" {{ old('room_id') == 5 ? ' selected' : '' }}>Suite Room - $25 /night</option>
+																		<option value="6" {{ old('room_id') == 6 ? ' selected' : '' }}>Classic Double Room - $48 /night</option>
+																	</select>
+																	<br>
+																	<label for="card_numer">Credit Card Number:</label>
+																	<input type="text" name="card_number" class="form-control" maxlength="16" value="{{ old('card_number') }}" required>
+																	<br>
+																	<label for="expiry_date">Expiry Date:</label>
+																	<input type="text" name="month" class="form-control col-md-6" maxlength="2" placeholder="MM" value="{{ old('month') }}" required>
+																	<br>
+																	<input type="text" name="year" class="form-control col-md-6" maxlength="4" placeholder="YYYY" value="{{ old('year') }}" required>
+																	<label for="ccv">CCV:</label>
+																	<input type="text" name="ccv_number" class="form-control" maxlength="3" value="{{ old('ccv_number') }}" required>
+																	<br>
+																	<label for="card_holder">Card Holder Name:</label>
+																	<input type="text" name="card_holder" class="form-control" required value="{{ old('card_holder') }}">
+																	<br>
+																	<input type="hidden" name="hotel_id" class="form-control" required value="{{ $hotel->id }}">
+																	<br>
 
-										<div class="col-md-12 animate-box">
-											<div class="room-wrap">
-												<div class="row">
-													<div class="col-md-6 col-sm-6">
-														<div class="room-img" style="background-image: url(/images/room-4.jpg);"></div>
-													</div>
-													<div class="col-md-6 col-sm-6">
-														<div class="desc">
-															<h2>Suite Room</h2>
-															<p class="price"><span>$25</span> <small>/ night</small></p>
-															<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
-															<p><a href="{{ route('booking', ['location' => strtolower($hotel->location->name), 'id' => $hotel->id]) }}" class="btn btn-primary">Book Now!</a></p>
+																	<input type="submit" class="btn btn-success float-right" value="Submit">
+																</div>
+															</div>
 														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-
-										<div class="col-md-12 animate-box">
-											<div class="room-wrap">
-												<div class="row">
-													<div class="col-md-6 col-sm-6">
-														<div class="room-img" style="background-image: url(/images/room-5.jpg);"></div>
-													</div>
-													<div class="col-md-6 col-sm-6">
-														<div class="desc">
-															<h2>Superior Double Room</h2>
-															<p class="price"><span>$50</span> <small>/ night</small></p>
-															<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
-															<p><a href="{{ route('booking', ['location' => strtolower($hotel->location->name), 'id' => $hotel->id]) }}" class="btn btn-primary">Book Now!</a></p>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-
-										<div class="col-md-12 animate-box">
-											<div class="room-wrap">
-												<div class="row">
-													<div class="col-md-6 col-sm-6">
-														<div class="room-img" style="background-image: url(/images/room-6.jpg);"></div>
-													</div>
-													<div class="col-md-6 col-sm-6">
-														<div class="desc">
-															<h2>Classic Double Room</h2>
-															<p class="price"><span>$48</span> <small>/ night</small></p>
-															<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
-															<p><a href="{{ route('booking', ['location' => strtolower($hotel->location->name), 'id' => $hotel->id]) }}" class="btn btn-primary">Book Now!</a></p>
-														</div>
-													</div>
+													</form>			
 												</div>
 											</div>
 										</div>

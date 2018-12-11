@@ -96,7 +96,7 @@
 									@foreach($hotels as $hotel)
 									<div class="col-md-6 col-sm-6 animate-box">
 										<div class="hotel-entry">
-											<a href="/hotel-room" class="hotel-img" style="background-image: url(https://loremflickr.com/800/535/hotel,resort/all?random={{ $hotel->id }});">
+											<a href="{{ route('rooms', ['location' => strtolower($hotel->location->name), 'id' => $hotel->id]) }}" class="hotel-img" style="background-image: url(https://loremflickr.com/800/535/hotel,resort/all?random={{ $hotel->id }});">
 												<p class="price"><span>${{ trim($hotel->price, '.0') }}</span><small> /night</small></p>
 											</a>
 											<div class="desc">
